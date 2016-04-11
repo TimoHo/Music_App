@@ -10,14 +10,11 @@ import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
 public class Window {
-
-	private JFrame frame;
-
-	/**
-	 * Launch the application.
-	 */
+	public static JTextArea instruments;
+	public static JFrame frame;
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@SuppressWarnings("static-access")
 			public void run() {
 				try {
 					Window window = new Window();
@@ -28,17 +25,13 @@ public class Window {
 			}
 		});
 	}
-
-	/**
-	 * Create the application.
-	 */
+	public static void addInstrument(String name,Integer number) {
+		instruments.setText(instruments.getText() + number + ": " + name + "\n");
+		frame.repaint();
+	}
 	public Window() {
 		initialize();
 	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 692, 457);
@@ -46,9 +39,9 @@ public class Window {
 		frame.getContentPane().setLayout(null);
 		
 		JTextArea text = new JTextArea();
-		text.setText("Normale Noten schnell hintereinander gespielt:\r\n[C][D][E][F][G][A][H][B: 100][X]\r\n[C1][D1][E1][F1][G1][A1][H1][B: 100][X]\r\n[C2][D2][E2][F2][G2][A2][H2][B: 100][X]\r\nNoten m\u00FCssen in eckigen klammern geschrieben werden\r\nPausen:\r\n[B: 100] (100ms pause)\r\n\r\nAbbruch:\r\n[X] (Bricht den gesamten ton ab)");
+		text.setText("Noten:\r\n\r\n[C-0] (C in der ersten Oktave)\r\n[C#1] (C in der zweiten Oktave mit #)\r\n\r\nPausen:\r\n\r\n[B: 100] (100ms Pause)\r\n\r\nInstrumente:\r\n\r\n[I: 1] (Wechsel auf instrument 1)\r\n\r\nLautst\u00E4rke\r\n\r\n[V: 50] (Lautst\u00E4rke auf 50%)\r\n\r\nAbbruch:\r\n\r\n[X] (Sofortiger Abbruch)\r\n[K] (Taste wird nichtmer gefr\u00FCckt aber klingt nach)");
 		text.setRows(10);
-		text.setBounds(10, 11, 656, 347);
+		text.setBounds(10, 11, 483, 347);
 		frame.getContentPane().add(text);
 		
 		Button button = new Button("Abspielen");
@@ -64,5 +57,14 @@ public class Window {
 		});
 		button.setBounds(161, 364, 365, 44);
 		frame.getContentPane().add(button);
+		
+		JTextArea txtpnInstrumente = new JTextArea();
+		txtpnInstrumente.setEditable(false);
+		txtpnInstrumente.setToolTipText("");
+		txtpnInstrumente.setText("Instrumente:\r\n");
+		txtpnInstrumente.setBounds(503, 11, 163, 347);
+		frame.getContentPane().add(txtpnInstrumente);
+		
+		instruments = txtpnInstrumente;
 	}
 }

@@ -9,12 +9,12 @@ public class Sound{
 	public Sound(String name) {
 		this.name = name;
 		this.option = 0;
-		this.note = MusicApp.getNotePos(name);
+		this.note = SoundConstructor.getNote(name);
     }
 	public Sound(String name,Integer option) {
 		this.name = name;
 		this.option = option;
-		this.note = MusicApp.getNotePos(name);
+		this.note = -1;
 	}
     public String getName() {
     	return this.name;
@@ -33,7 +33,15 @@ public class Sound{
             	if (this.name == "K") {
             		MusicApp.midiChannel.allNotesOff();
             	} else {
-            		MusicApp.playMidi(this.note);
+            		if (this.name == "I") {
+            			MusicApp.midiChannel.programChange(this.option);
+            		} else {
+            			if (this.name == "V") {
+            				MusicApp.volume = this.option;
+            			} else {
+                    		MusicApp.playMidi(this.note);
+            			}
+            		}
             	}
     		}
     	}
