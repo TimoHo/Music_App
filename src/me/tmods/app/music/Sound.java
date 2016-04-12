@@ -28,6 +28,7 @@ public class Sound{
 			}
     	} else {
     		if (this.name == "X") {
+    			MusicApp.midiChannel.allNotesOff();
     			MusicApp.midiChannel.allSoundOff();
     		} else {
             	if (this.name == "K") {

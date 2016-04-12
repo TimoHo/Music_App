@@ -63,7 +63,7 @@ public class SoundConstructor {
 		char name = code.charAt(0);
 		char half = code.charAt(1);
 		System.out.println(code.charAt(2));
-		Integer octave = Integer.valueOf(code.charAt(2) + "");
+		Integer octave = Integer.valueOf(code.charAt(2) + "") - 1;
 		Integer noteInOctave = -1;
 		switch (name) {
 		case('C'): noteInOctave = 1; break;
