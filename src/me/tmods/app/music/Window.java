@@ -13,10 +13,13 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
+
+import me.tmods.app.MusicApp;
 
 public class Window {
 	public static JTextArea instruments;
-	public static JFrame frame;
+	public static JFrame frmSmlSynthesizer;
 	private JTextField textField;
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -24,7 +27,7 @@ public class Window {
 			public void run() {
 				try {
 					Window window = new Window();
-					window.frame.setVisible(true);
+					window.frmSmlSynthesizer.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -33,64 +36,78 @@ public class Window {
 	}
 	public static void addInstrument(String name,Integer number) {
 		instruments.setText(instruments.getText() + number + ": " + name + "\n");
-		frame.repaint();
+		frmSmlSynthesizer.repaint();
 	}
 	public Window() {
 		initialize();
 	}
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 692, 450);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+		frmSmlSynthesizer = new JFrame();
+		frmSmlSynthesizer.setResizable(false);
+		frmSmlSynthesizer.setBounds(100, 100, 692, 450);
+		frmSmlSynthesizer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmSmlSynthesizer.getContentPane().setLayout(null);
 		
-		JTextArea text = new JTextArea();
-		text.setText("Noten:\r\n\r\n[C-1] (C in der ersten Oktave)\r\n[C#2] (C in der zweiten Oktave mit #)\r\n\r\nPausen:\r\n\r\n[B: 100] (100ms Pause)\r\n\r\nInstrumente:\r\n\r\n[I: 1] (Wechsel auf instrument 1)\r\n\r\nLautst\u00E4rke\r\n\r\n[V: 50] (Lautst\u00E4rke auf 50%)\r\n\r\nAbbruch:\r\n\r\n[X] (Sofortiger Abbruch)\r\n[K] (Taste wird nichtmer gedr\u00FCckt aber klingt nach)");
-		text.setRows(10);
+		JTextPane text = new JTextPane();
 		text.setBounds(10, 11, 483, 347);
-		frame.getContentPane().add(text);
+		frmSmlSynthesizer.getContentPane().add(text);
 		
 		JTextArea txtpnInstrumente = new JTextArea();
 		txtpnInstrumente.setEditable(false);
 		txtpnInstrumente.setToolTipText("");
 		txtpnInstrumente.setText("Instrumente:\r\n");
 		txtpnInstrumente.setBounds(503, 11, 163, 347);
-		frame.getContentPane().add(txtpnInstrumente);
+		frmSmlSynthesizer.getContentPane().add(txtpnInstrumente);
 		
 		instruments = txtpnInstrumente;
 		
 		JScrollPane scrollPane = new JScrollPane(txtpnInstrumente);
-		scrollPane.setBounds(503, 10, 163, 347);
-		frame.getContentPane().add(scrollPane);
+		scrollPane.setBounds(503, 56, 163, 302);
+		frmSmlSynthesizer.getContentPane().add(scrollPane);
 		
 		JScrollPane scrollPane_1 = new JScrollPane(text);
 		scrollPane_1.setBounds(10, 11, 483, 347);
-		frame.getContentPane().add(scrollPane_1);
+		frmSmlSynthesizer.getContentPane().add(scrollPane_1);
 		
 		
 		JButton button = new JButton("Abspielen");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				List<Sound> sounds = SoundConstructor.fromText(text.getText());
-				for (Sound s:sounds) {
-					if (s != null)  {
-						s.play();
+				Runnable r = new Runnable() {
+					@Override
+					public void run() {
+						for (Sound s:sounds) {
+							if (s != null)  {
+								s.play();	
+								if (!s.getName().equalsIgnoreCase("B")) {
+									try {
+										Thread.sleep(MusicApp.beat);
+									} catch (InterruptedException e) {
+										e.printStackTrace();
+									}
+								}
+							}
+						}
 					}
-				}
+				};
+				Thread t = new Thread(r);
+				MusicApp.playThread = t;
+				t.start();
 			}
 		});
 		button.setBounds(10, 364, 325, 44);
-		frame.getContentPane().add(button);
+		frmSmlSynthesizer.getContentPane().add(button);
 		
 		JComboBox comboBox = new JComboBox();
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"[C-]", "[C#]", "[Db]", "[D-]", "[D#]", "[Eb]", "[E-]", "[F-]", "[F#]", "[Gb]", "[G-]", "[G#]", "[Ab]", "[A-]", "[A#]", "[Hb]", "[H-]", "[B: ]", "[I: ]", "[K]", "[X]", "[V: ]"}));
 		comboBox.setBounds(507, 368, 60, 20);
-		frame.getContentPane().add(comboBox);
+		frmSmlSynthesizer.getContentPane().add(comboBox);
 		
 		textField = new JTextField();
 		textField.setBounds(507, 388, 60, 20);
-		frame.getContentPane().add(textField);
+		frmSmlSynthesizer.getContentPane().add(textField);
 		textField.setColumns(10);
 		
 		JButton btnNewButton = new JButton("Hinzuf\u00FCgen");
@@ -104,14 +121,29 @@ public class Window {
 			}
 		});
 		btnNewButton.setBounds(566, 368, 100, 40);
-		frame.getContentPane().add(btnNewButton);
+		frmSmlSynthesizer.getContentPane().add(btnNewButton);
 		
 		JLabel lblNoteaktion = new JLabel("Note/Aktion:");
 		lblNoteaktion.setBounds(419, 371, 90, 14);
-		frame.getContentPane().add(lblNoteaktion);
+		frmSmlSynthesizer.getContentPane().add(lblNoteaktion);
 		
 		JLabel lblOktaveoption = new JLabel("Oktave/Option:");
 		lblOktaveoption.setBounds(419, 391, 90, 14);
-		frame.getContentPane().add(lblOktaveoption);
+		frmSmlSynthesizer.getContentPane().add(lblOktaveoption);
+		
+		JButton btnNewButton_1 = new JButton("Abbr.");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
+			public void actionPerformed(ActionEvent arg0) {
+				if (MusicApp.playThread != null) {
+					if (MusicApp.playThread.isAlive()) {
+						MusicApp.playThread.stop();
+						text.repaint();
+					}
+				}
+			}
+		});
+		btnNewButton_1.setBounds(336, 367, 76, 41);
+		frmSmlSynthesizer.getContentPane().add(btnNewButton_1);
 	}
 }

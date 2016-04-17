@@ -8,6 +8,7 @@ import javax.sound.midi.Instrument;
 import javax.sound.midi.MidiChannel;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Soundbank;
 import javax.sound.midi.Synthesizer;
 
 import me.tmods.app.music.Sound;
@@ -19,12 +20,15 @@ public class MusicApp {
 	public static MidiChannel midiChannel;
 	public static List<Sound> sounds = new ArrayList<Sound>();
 	public static Integer volume = 100;
+	public static Thread playThread;
+	public static Integer beat = 0;
 	public static void main(String[] args) {
 		Window.main(args);
 		try {
 			synth = MidiSystem.getSynthesizer();
 			synth.open();
-			midiInstruments = synth.getAvailableInstruments();
+			Soundbank sb = synth.getDefaultSoundbank();
+			midiInstruments = sb.getInstruments();
 			midiChannel = synth.getChannels()[0];
 			for (int i = 0;i < midiInstruments.length;i++) {
 				Window.addInstrument(midiInstruments[i].getName(), i);

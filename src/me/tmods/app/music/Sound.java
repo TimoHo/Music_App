@@ -6,30 +6,40 @@ public class Sound{
 	private String name;
 	private Integer option;
 	private Integer note;
-	public Sound(String name) {
+	private Integer begin;
+	private Integer end;
+	public Sound(String name,Integer begin,Integer end) {
 		this.name = name;
 		this.option = 0;
 		this.note = SoundConstructor.getNote(name);
+		this.begin = begin;
+		this.end = end;
     }
-	public Sound(String name,Integer option) {
+	public Sound(String name,Integer option,Integer begin,Integer end) {
 		this.name = name;
 		this.option = option;
 		this.note = -1;
+		this.begin = begin;
+		this.end = end;
+	}
+	public Integer getBegin() {
+		return this.begin;
+	}
+	public Integer getEnd() {
+		return this.end;
 	}
     public String getName() {
     	return this.name;
 	}
     public void play() {
     	if (this.name == "B") {
-    		try {
-				Thread.sleep(this.option);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+    		MusicApp.beat = this.option;
     	} else {
     		if (this.name == "X") {
+    			MusicApp.midiChannel.setMute(true);
     			MusicApp.midiChannel.allNotesOff();
     			MusicApp.midiChannel.allSoundOff();
+    			MusicApp.midiChannel.setMute(false);
     		} else {
             	if (this.name == "K") {
             		MusicApp.midiChannel.allNotesOff();
