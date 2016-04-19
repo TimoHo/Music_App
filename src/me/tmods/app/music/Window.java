@@ -1,5 +1,6 @@
 package me.tmods.app.music;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,6 +22,7 @@ public class Window {
 	public static JTextArea instruments;
 	public static JFrame frmSmlSynthesizer;
 	private JTextField textField;
+	private JTextField txtZeile;
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			@SuppressWarnings("static-access")
@@ -50,8 +52,14 @@ public class Window {
 		frmSmlSynthesizer.getContentPane().setLayout(null);
 		
 		JTextPane text = new JTextPane();
-		text.setBounds(10, 11, 483, 347);
+		text.setBounds(159, 1, 323, 345);
 		frmSmlSynthesizer.getContentPane().add(text);
+		
+		DisplaySound canvas = new DisplaySound();
+		canvas.setForeground(Color.BLACK);
+		canvas.setBackground(Color.WHITE);
+		canvas.setBounds(10, 11, 178, 347);
+		frmSmlSynthesizer.getContentPane().add(canvas);
 		
 		JTextArea txtpnInstrumente = new JTextArea();
 		txtpnInstrumente.setEditable(false);
@@ -66,20 +74,42 @@ public class Window {
 		scrollPane.setBounds(503, 56, 163, 302);
 		frmSmlSynthesizer.getContentPane().add(scrollPane);
 		
+		txtZeile = new JTextField();
+		txtZeile.setEditable(false);
+		txtZeile.setText("Zeile: ");
+		txtZeile.setBounds(503, 11, 163, 28);
+		frmSmlSynthesizer.getContentPane().add(txtZeile);
+		txtZeile.setColumns(10);
+		
 		JScrollPane scrollPane_1 = new JScrollPane(text);
-		scrollPane_1.setBounds(10, 11, 483, 347);
+		scrollPane_1.setBounds(194, 11, 299, 347);
 		frmSmlSynthesizer.getContentPane().add(scrollPane_1);
 		
 		
 		JButton button = new JButton("Abspielen");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				if (MusicApp.playThread != null) {
+					if (MusicApp.playThread.isAlive()) {
+						return;
+					}
+				}
 				List<Sound> sounds = SoundConstructor.fromText(text.getText());
 				Runnable r = new Runnable() {
 					@Override
 					public void run() {
 						for (Sound s:sounds) {
 							if (s != null)  {
+								txtZeile.setText("Zeile: " + getLine(s.getBegin(),text.getText()));
+								canvas.add(s.getHeight());
+								canvas.repaint();
+								try {
+									canvas.update();
+								} catch (InstantiationException e1) {
+									e1.printStackTrace();
+								} catch (IllegalAccessException e1) {
+									e1.printStackTrace();
+								}
 								s.play();	
 								if (!s.getName().equalsIgnoreCase("B")) {
 									try {
@@ -97,7 +127,7 @@ public class Window {
 				t.start();
 			}
 		});
-		button.setBounds(10, 364, 325, 44);
+		button.setBounds(36, 364, 203, 44);
 		frmSmlSynthesizer.getContentPane().add(button);
 		
 		JComboBox comboBox = new JComboBox();
@@ -143,7 +173,22 @@ public class Window {
 				}
 			}
 		});
-		btnNewButton_1.setBounds(336, 367, 76, 41);
+		btnNewButton_1.setBounds(249, 366, 141, 41);
 		frmSmlSynthesizer.getContentPane().add(btnNewButton_1);
+	}
+	private Integer getLine(Integer position,String text) {
+		if (text.length() >= position) {
+			String[] lines = text.split("\n");
+			Integer toMove = position;
+			for (int i = 0; i<lines.length;i++) {
+				String l = lines[i];
+				if (l.length() <= toMove) {
+					toMove -= l.length();
+				} else {
+					return i + 1;
+				}
+			}
+		}
+		return -1;
 	}
 }

@@ -62,4 +62,8 @@ public class Sound{
     public String toString() {
     	return this.name + ":" + this.option;
     }
+    
+    public Integer getHeight() {
+    	return SoundConstructor.getNote(name);
+    }
 }
