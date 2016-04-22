@@ -10,6 +10,8 @@ import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Soundbank;
 import javax.sound.midi.Synthesizer;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import me.tmods.app.music.Sound;
 import me.tmods.app.music.Window;
@@ -17,19 +19,25 @@ import me.tmods.app.music.Window;
 public class MusicApp {
 	public static Synthesizer synth;
 	public static Instrument[] midiInstruments;
-	public static MidiChannel midiChannel;
+	public static MidiChannel[] midiChannel;
 	public static List<Sound> sounds = new ArrayList<Sound>();
-	public static Integer volume = 100;
+	public static Integer[] volume = {100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100};
 	public static Thread playThread;
-	public static Integer beat = 0;
+	public static Integer[] beat = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 	public static void main(String[] args) {
-		Window.main(args);
+		try {
+			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e1) {
+			e1.printStackTrace();
+		}
+		Window.open();
 		try {
 			synth = MidiSystem.getSynthesizer();
 			synth.open();
 			Soundbank sb = synth.getDefaultSoundbank();
 			midiInstruments = sb.getInstruments();
-			midiChannel = synth.getChannels()[0];
+			midiChannel = synth.getChannels();
 			for (int i = 0;i < midiInstruments.length;i++) {
 				Window.addInstrument(midiInstruments[i].getName(), i);
 			}
@@ -37,9 +45,9 @@ public class MusicApp {
 			e.printStackTrace();
 		}
 	}
-	public static synchronized void playMidi(final Integer sound) {
+	public static synchronized void playMidi(final Integer sound,final Integer channel) {
 		if (sound != -1) {
-			midiChannel.noteOn(sound, volume);
+			midiChannel[channel].noteOn(sound, volume[channel]);
 		}
 	}
 }

@@ -8,6 +8,7 @@ public class SoundConstructor {
 		List<Sound> list = new ArrayList<Sound>();
 		for (int i = 0; i < text.length();i++) {
 			if (text.charAt(i) == '[') {
+				Integer channel = 0;
 				final Integer begin = i;
 				i++;
 				if (text.charAt(i) == 'B') {
@@ -19,7 +20,18 @@ public class SoundConstructor {
 						s = s + text.charAt(i);
 						i++;
 					}
-					list.add(new Sound("B",Integer.valueOf(s),begin,i));
+					if (text.length() > i+1) {
+						if (text.charAt(i+1) == '(') {
+							i++;
+							i++;
+							String chn = "";
+							while (text.charAt(i) != ')') {
+								chn = chn + text.charAt(i); i++;
+							}
+							channel = Integer.valueOf(chn);
+						}
+					}
+					list.add(new Sound("B",Integer.valueOf(s),begin,i,channel));
 				} else {
 					if (text.charAt(i) == 'V') {
 						i++;
@@ -30,7 +42,18 @@ public class SoundConstructor {
 							s = s + text.charAt(i);
 							i++;
 						}
-						list.add(new Sound("V",Integer.valueOf(s),begin,i));
+						if (text.length() > i+1) {
+							if (text.charAt(i+1) == '(') {
+								i++;
+								i++;
+								String chn = "";
+								while (text.charAt(i) != ')') {
+									chn = chn + text.charAt(i); i++;
+								}
+								channel = Integer.valueOf(chn);
+							}
+						}
+						list.add(new Sound("V",Integer.valueOf(s),begin,i,channel));
 					} else {
 						if (text.charAt(i) == 'I') {
 							i++;
@@ -41,20 +64,41 @@ public class SoundConstructor {
 								s = s + text.charAt(i);
 								i++;
 							}
-							list.add(new Sound("I",Integer.valueOf(s),begin,i));
+							if (text.length() > i+1) {
+								if (text.charAt(i+1) == '(') {
+									i++;
+									i++;
+									String chn = "";
+									while (text.charAt(i) != ')') {
+										chn = chn + text.charAt(i); i++;
+									}
+									channel = Integer.valueOf(chn);
+								}
+							}
+							list.add(new Sound("I",Integer.valueOf(s),begin,i,channel));
 						} else {
 							String s = "";
 							while(text.charAt(i) != ']') {
 								s = s + text.charAt(i);
 								i++;
 							}
-							list.add(new Sound(s,begin,i));
+							if (text.length() > i+1) {
+								if (text.charAt(i+1) == '(') {
+									i++;
+									i++;
+									String chn = "";
+									while (text.charAt(i) != ')') {
+										chn = chn + text.charAt(i); i++;
+									}
+									channel = Integer.valueOf(chn);
+								}
+							}
+							list.add(new Sound(s,begin,i,channel));
 						}
 					}
 				}
 			}
 		}
-		System.out.println(list.toString());
 		return list;
 	}
 	public static Integer getNote(String code) {
@@ -63,7 +107,6 @@ public class SoundConstructor {
 		}
 		char name = code.charAt(0);
 		char half = code.charAt(1);
-		System.out.println(code.charAt(2));
 		Integer octave = Integer.valueOf(code.charAt(2) + "") + 1;
 		Integer noteInOctave = -1;
 		switch (name) {

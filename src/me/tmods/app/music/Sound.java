@@ -8,19 +8,22 @@ public class Sound{
 	private Integer note;
 	private Integer begin;
 	private Integer end;
-	public Sound(String name,Integer begin,Integer end) {
+	private Integer channel;
+	public Sound(String name,Integer begin,Integer end,Integer channel) {
 		this.name = name;
 		this.option = 0;
 		this.note = SoundConstructor.getNote(name);
 		this.begin = begin;
 		this.end = end;
+		this.channel = channel;
     }
-	public Sound(String name,Integer option,Integer begin,Integer end) {
+	public Sound(String name,Integer option,Integer begin,Integer end,Integer channel) {
 		this.name = name;
 		this.option = option;
 		this.note = -1;
 		this.begin = begin;
 		this.end = end;
+		this.channel = channel;
 	}
 	public Integer getBegin() {
 		return this.begin;
@@ -33,31 +36,33 @@ public class Sound{
 	}
     public void play() {
     	if (this.name == "B") {
-    		MusicApp.beat = this.option;
+    		MusicApp.beat[this.channel] = this.option;
     	} else {
     		if (this.name == "X") {
-    			MusicApp.midiChannel.setMute(true);
-    			MusicApp.midiChannel.allNotesOff();
-    			MusicApp.midiChannel.allSoundOff();
-    			MusicApp.midiChannel.setMute(false);
+    			MusicApp.midiChannel[this.channel].setMute(true);
+    			MusicApp.midiChannel[this.channel].allNotesOff();
+    			MusicApp.midiChannel[this.channel].allSoundOff();
+    			MusicApp.midiChannel[this.channel].setMute(false);
     		} else {
             	if (this.name == "K") {
-            		MusicApp.midiChannel.allNotesOff();
+            		MusicApp.midiChannel[this.channel].allNotesOff();
             	} else {
             		if (this.name == "I") {
-            			MusicApp.midiChannel.programChange(this.option);
+            			MusicApp.midiChannel[this.channel].programChange(this.option);
             		} else {
             			if (this.name == "V") {
-            				MusicApp.volume = this.option;
+            				MusicApp.volume[this.channel] = this.option;
             			} else {
-                    		MusicApp.playMidi(this.note);
+                    		MusicApp.playMidi(this.note,this.channel);
             			}
             		}
             	}
     		}
     	}
     }
-    
+    public Integer getChannel() {
+    	return this.channel;
+    }
     @Override
     public String toString() {
     	return this.name + ":" + this.option;

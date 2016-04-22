@@ -22,8 +22,7 @@ public class Window {
 	public static JTextArea instruments;
 	public static JFrame frmSmlSynthesizer;
 	private JTextField textField;
-	private JTextField txtZeile;
-	public static void main(String[] args) {
+	public static void open() {
 		EventQueue.invokeLater(new Runnable() {
 			@SuppressWarnings("static-access")
 			public void run() {
@@ -52,14 +51,9 @@ public class Window {
 		frmSmlSynthesizer.getContentPane().setLayout(null);
 		
 		JTextPane text = new JTextPane();
-		text.setBounds(159, 1, 323, 345);
+		text.setBackground(Color.WHITE);
+		text.setBounds(3, 3, 488, 341);
 		frmSmlSynthesizer.getContentPane().add(text);
-		
-		DisplaySound canvas = new DisplaySound();
-		canvas.setForeground(Color.BLACK);
-		canvas.setBackground(Color.WHITE);
-		canvas.setBounds(10, 11, 178, 347);
-		frmSmlSynthesizer.getContentPane().add(canvas);
 		
 		JTextArea txtpnInstrumente = new JTextArea();
 		txtpnInstrumente.setEditable(false);
@@ -71,21 +65,19 @@ public class Window {
 		instruments = txtpnInstrumente;
 		
 		JScrollPane scrollPane = new JScrollPane(txtpnInstrumente);
-		scrollPane.setBounds(503, 56, 163, 302);
+		scrollPane.setBounds(503, 11, 163, 347);
 		frmSmlSynthesizer.getContentPane().add(scrollPane);
 		
-		txtZeile = new JTextField();
-		txtZeile.setEditable(false);
-		txtZeile.setText("Zeile: ");
-		txtZeile.setBounds(503, 11, 163, 28);
-		frmSmlSynthesizer.getContentPane().add(txtZeile);
-		txtZeile.setColumns(10);
+		DisplaySound canvas = new DisplaySound();
+		canvas.setForeground(Color.BLACK);
+		canvas.setBackground(Color.WHITE);
+		canvas.setBounds(10, 11, 178, 347);
+		frmSmlSynthesizer.getContentPane().add(canvas);
 		
 		JScrollPane scrollPane_1 = new JScrollPane(text);
-		scrollPane_1.setBounds(194, 11, 299, 347);
+		scrollPane_1.setBounds(214, 11, 279, 347);
 		frmSmlSynthesizer.getContentPane().add(scrollPane_1);
-		
-		
+
 		JButton button = new JButton("Abspielen");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -100,7 +92,6 @@ public class Window {
 					public void run() {
 						for (Sound s:sounds) {
 							if (s != null)  {
-								txtZeile.setText("Zeile: " + getLine(s.getBegin(),text.getText()));
 								canvas.add(s.getHeight());
 								canvas.repaint();
 								try {
@@ -113,7 +104,7 @@ public class Window {
 								s.play();	
 								if (!s.getName().equalsIgnoreCase("B")) {
 									try {
-										Thread.sleep(MusicApp.beat);
+										Thread.sleep(MusicApp.beat[s.getChannel()]);
 									} catch (InterruptedException e) {
 										e.printStackTrace();
 									}
@@ -129,6 +120,7 @@ public class Window {
 		});
 		button.setBounds(36, 364, 203, 44);
 		frmSmlSynthesizer.getContentPane().add(button);
+		
 		
 		JComboBox comboBox = new JComboBox();
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"[C-]", "[C#]", "[Db]", "[D-]", "[D#]", "[Eb]", "[E-]", "[F-]", "[F#]", "[Gb]", "[G-]", "[G#]", "[Ab]", "[A-]", "[A#]", "[Hb]", "[H-]", "[B: ]", "[I: ]", "[K]", "[X]", "[V: ]"}));
@@ -175,20 +167,5 @@ public class Window {
 		});
 		btnNewButton_1.setBounds(249, 366, 141, 41);
 		frmSmlSynthesizer.getContentPane().add(btnNewButton_1);
-	}
-	private Integer getLine(Integer position,String text) {
-		if (text.length() >= position) {
-			String[] lines = text.split("\n");
-			Integer toMove = position;
-			for (int i = 0; i<lines.length;i++) {
-				String l = lines[i];
-				if (l.length() <= toMove) {
-					toMove -= l.length();
-				} else {
-					return i + 1;
-				}
-			}
-		}
-		return -1;
 	}
 }
