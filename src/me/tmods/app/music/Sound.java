@@ -1,5 +1,8 @@
 package me.tmods.app.music;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import me.tmods.app.MusicApp;
 
 public class Sound{
@@ -53,7 +56,19 @@ public class Sound{
             			if (this.name == "V") {
             				MusicApp.volume[this.channel] = this.option;
             			} else {
-                    		MusicApp.playMidi(this.note,this.channel);
+                    		if (this.name == "O") {
+                    			MusicApp.timeOut[channel] = this.option;
+                    		} else {
+                    			MusicApp.playMidi(this.note,this.channel);
+                        		TimerTask off = new TimerTask() {
+    								@Override
+    								public void run() {
+    									MusicApp.stopMidi(note, channel);
+    								}	
+                        		};
+                        		Timer timeOut = new Timer();
+                        		timeOut.schedule(off, MusicApp.timeOut[channel]);
+                    		}
             			}
             		}
             	}

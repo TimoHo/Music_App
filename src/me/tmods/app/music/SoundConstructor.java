@@ -77,23 +77,46 @@ public class SoundConstructor {
 							}
 							list.add(new Sound("I",Integer.valueOf(s),begin,i,channel));
 						} else {
-							String s = "";
-							while(text.charAt(i) != ']') {
-								s = s + text.charAt(i);
+							if (text.charAt(i) == 'O') {
 								i++;
-							}
-							if (text.length() > i+1) {
-								if (text.charAt(i+1) == '(') {
+								i++;
+								i++;
+								String s = "";
+								while(text.charAt(i) != ']') {
+									s = s + text.charAt(i);
 									i++;
-									i++;
-									String chn = "";
-									while (text.charAt(i) != ')') {
-										chn = chn + text.charAt(i); i++;
-									}
-									channel = Integer.valueOf(chn);
 								}
+								if (text.length() > i+1) {
+									if (text.charAt(i+1) == '(') {
+										i++;
+										i++;
+										String chn = "";
+										while (text.charAt(i) != ')') {
+											chn = chn + text.charAt(i); i++;
+										}
+										channel = Integer.valueOf(chn);
+									}
+								}
+								list.add(new Sound("O",Integer.valueOf(s),begin,i,channel));
+							} else {
+								String s = "";
+								while(text.charAt(i) != ']') {
+									s = s + text.charAt(i);
+									i++;
+								}
+								if (text.length() > i+1) {
+									if (text.charAt(i+1) == '(') {
+										i++;
+										i++;
+										String chn = "";
+										while (text.charAt(i) != ')') {
+											chn = chn + text.charAt(i); i++;
+										}
+										channel = Integer.valueOf(chn);
+									}
+								}
+								list.add(new Sound(s,begin,i,channel));
 							}
-							list.add(new Sound(s,begin,i,channel));
 						}
 					}
 				}

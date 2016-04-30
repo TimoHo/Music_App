@@ -24,6 +24,7 @@ public class MusicApp {
 	public static Integer[] volume = {100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100};
 	public static Thread playThread;
 	public static Integer[] beat = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+	public static Integer[] timeOut = {10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10};
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
@@ -32,6 +33,11 @@ public class MusicApp {
 			e1.printStackTrace();
 		}
 		Window.open();
+		while (!Window.init){try {
+			Thread.sleep(10);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
 		try {
 			synth = MidiSystem.getSynthesizer();
 			synth.open();
@@ -48,6 +54,11 @@ public class MusicApp {
 	public static synchronized void playMidi(final Integer sound,final Integer channel) {
 		if (sound != -1) {
 			midiChannel[channel].noteOn(sound, volume[channel]);
+		}
+	}
+	public static synchronized void stopMidi(final Integer sound,final Integer channel) {
+		if (sound != -1) {
+			midiChannel[channel].noteOff(sound);
 		}
 	}
 }

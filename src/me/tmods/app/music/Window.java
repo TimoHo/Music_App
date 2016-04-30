@@ -21,14 +21,16 @@ import me.tmods.app.MusicApp;
 public class Window {
 	public static JTextArea instruments;
 	public static JFrame frmSmlSynthesizer;
+	public static boolean init = false;
 	private JTextField textField;
+	@SuppressWarnings("static-access")
 	public static void open() {
 		EventQueue.invokeLater(new Runnable() {
-			@SuppressWarnings("static-access")
 			public void run() {
 				try {
 					Window window = new Window();
 					window.frmSmlSynthesizer.setVisible(true);
+					init = true;
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -123,7 +125,7 @@ public class Window {
 		
 		
 		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"[C-]", "[C#]", "[Db]", "[D-]", "[D#]", "[Eb]", "[E-]", "[F-]", "[F#]", "[Gb]", "[G-]", "[G#]", "[Ab]", "[A-]", "[A#]", "[Hb]", "[H-]", "[B: ]", "[I: ]", "[K]", "[X]", "[V: ]"}));
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"[C-]", "[C#]", "[Db]", "[D-]", "[D#]", "[Eb]", "[E-]", "[F-]", "[F#]", "[Gb]", "[G-]", "[G#]", "[Ab]", "[A-]", "[A#]", "[Hb]", "[H-]", "[B: ]", "[I: ]", "[K]", "[X]", "[V: ]", "[O: ]"}));
 		comboBox.setBounds(507, 368, 60, 20);
 		frmSmlSynthesizer.getContentPane().add(comboBox);
 		
