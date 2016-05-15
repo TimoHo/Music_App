@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SoundConstructor {
+	public static Integer prevLength = 0;
 	public static List<Sound> fromText(String text) {
+		Integer length = 0;
+		Integer[] breaks = new Integer[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 		List<Sound> list = new ArrayList<Sound>();
 		for (int i = 0; i < text.length();i++) {
 			if (text.charAt(i) == '[') {
@@ -31,6 +34,7 @@ public class SoundConstructor {
 							channel = Integer.valueOf(chn);
 						}
 					}
+					breaks[channel] = Integer.valueOf(s);
 					list.add(new Sound("B",Integer.valueOf(s),begin,i,channel));
 				} else {
 					if (text.charAt(i) == 'V') {
@@ -115,6 +119,7 @@ public class SoundConstructor {
 										channel = Integer.valueOf(chn);
 									}
 								}
+								length += breaks[channel];
 								list.add(new Sound(s,begin,i,channel));
 							}
 						}
@@ -122,6 +127,7 @@ public class SoundConstructor {
 				}
 			}
 		}
+		prevLength  = length;
 		return list;
 	}
 	public static Integer getNote(String code) {

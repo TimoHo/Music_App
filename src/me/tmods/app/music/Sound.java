@@ -86,4 +86,7 @@ public class Sound{
     public Integer getHeight() {
     	return SoundConstructor.getNote(name);
     }
+	public Integer getNote() {
+		return this.note;
+	}
 }

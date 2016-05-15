@@ -13,6 +13,7 @@ import javax.sound.midi.Synthesizer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import me.tmods.app.music.ExceptionHandler;
 import me.tmods.app.music.Sound;
 import me.tmods.app.music.Window;
 
@@ -24,8 +25,9 @@ public class MusicApp {
 	public static Integer[] volume = {100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100};
 	public static Thread playThread;
 	public static Integer[] beat = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-	public static Integer[] timeOut = {10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10};
+	public static Integer[] timeOut = {1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000};
 	public static void main(String[] args) {
+		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
 		try {
 			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
